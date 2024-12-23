@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  hello:
+    build:
+      context: ./hello-store
+    container_name: hello
+    networks:
+      - caddy_network
+    labels:
+      caddy: hello.localhost
+      caddy.reverse_proxy: "{{upstreams 5173}}"
+
+  taida:
+    build:
+      context: ./taida-store
+    container_name: taida
+    networks:
+      - caddy_network
+    labels:
+      caddy: taida.localhost
+      caddy.reverse_proxy: "{{upstreams 5173}}"
+
+  caddy:
+    image: caddy:latest
+    container_name: caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    networks:
+      - caddy_network
+
+networks:
+  caddy_network:
+
+volumes:
+  caddy_data:
+  caddy_config:

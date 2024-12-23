@@ -1,0 +1,11 @@
+{
+  admin localhost:2019  # Exposes Caddy's API on port 2019
+}
+
+hello.localhost {
+    reverse_proxy hello:5173
+}
+
+taida.localhost {
+    reverse_proxy taida:5173
+}
